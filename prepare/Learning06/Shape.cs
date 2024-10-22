@@ -1,7 +1,6 @@
-using System.Drawing;
 
-class abstract Shape{
-string private _color;
+abstract class Shape{
+private string _color;
 
 public Shape(string color){
     _color=color;
@@ -12,5 +11,5 @@ public string GetColor(){
 public void setColor(string color){
     _color=color;
 }
-public abstract float GetArea();
+public abstract double GetArea();
 }

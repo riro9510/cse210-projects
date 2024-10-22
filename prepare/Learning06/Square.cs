@@ -1,9 +1,9 @@
 class Square:Shape{
-private string _side;
-public Square(String color,float side):base(color){
+private double _side;
+public Square(String color,double side):base(color){
     _side=side;
 }
-public override float GetArea(){
+public override double GetArea(){
     return _side*_side;
 }
 }
