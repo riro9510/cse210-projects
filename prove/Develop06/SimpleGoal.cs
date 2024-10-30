@@ -2,8 +2,8 @@ class  SimpleGoal : Goal
 {
     private bool _isComplete;
 
-    public SimpleGoal(string name,string description,int points):base(name,description,points){
-        _isComplete=false;
+    public SimpleGoal(string name,string description,int points, bool isComplete):base(name,description,points){
+        _isComplete=isComplete;
         Console.WriteLine("You have 0 points");
     }
     public override void RecordEvent()
@@ -11,8 +11,6 @@ class  SimpleGoal : Goal
         Console.WriteLine($"Congratulations! you have earned {points} points");
         _isComplete=true;
     }
-
-    // Método para verificar si la meta está completa
     public override bool isComplete()
     {
         return _isComplete;

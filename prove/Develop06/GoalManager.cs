@@ -18,6 +18,7 @@ class GoalManager
     {
         while (true) 
         {
+            DisplayPlayerInfo();
             Console.WriteLine("Menu options:");
             Console.WriteLine("1. Create New Goal");
             Console.WriteLine("2. List Goals");
@@ -69,10 +70,9 @@ class GoalManager
 
     public void DisplayPlayerInfo()
     {
-        // Implementación del método
+        Console.WriteLine($"You have {_score}");
     }
 
-    // Método para listar los nombres de las metas
     public void ListGoalNames()
     {
          Console.WriteLine("The goals are:");
@@ -81,7 +81,6 @@ class GoalManager
         }
     }
 
-    // Método para listar los detalles de las metas
     public void ListGoalDetails()
     {
         List<String> goalsStrings = [];
@@ -115,7 +114,7 @@ class GoalManager
                     string pointsInput = Console.ReadLine();
                     if (int.TryParse(pointsInput, out int points))
                     {
-                        SimpleGoal newGoal = new SimpleGoal(name, description, points);
+                        SimpleGoal newGoal = new SimpleGoal(name, description, points,false);
                         _goals.Add(newGoal);
                     }
                     else
@@ -178,7 +177,7 @@ class GoalManager
         Start();
     }
 
-    // Método para registrar un evento
+
     public void RecordEvent()
     {
        Console.WriteLine("The Goals are:");
@@ -192,18 +191,72 @@ class GoalManager
     public void SaveGoals()
     {
         Console.WriteLine("Enter the name for your file(without extension): ");
-        String rutaArchivo = Console.ReadLine();
+        String pathToFile = Console.ReadLine();
         ListGoalDetails();
-        using (StreamWriter writer = new StreamWriter(rutaArchivo)){
+        using (StreamWriter writer = new StreamWriter(pathToFile)){
              string clave = _score.ToString();
             string jsonValores = JsonSerializer.Serialize(_listSave);
             writer.WriteLine($"{clave}:{jsonValores}");
         }
     }
 
-    // Método para cargar las metas
     public void LoadGoals()
     {
-        // Implementación del método
+       try
+        {   Console.WriteLine("Enter the name for your file(without extension): ");
+            String pathToFile = Console.ReadLine();
+            using (StreamReader reader = new StreamReader(pathToFile))
+            {
+                string line = reader.ReadLine();
+                if (line != null)
+                {
+                 
+                    var parts = line.Split(':', 2);
+                    if (parts.Length == 2)
+                    {
+                        _score = int.Parse(parts[0]); 
+                        string jsonValores = parts[1]; 
+
+                        
+                        _listSave = JsonSerializer.Deserialize<List<String>>(jsonValores);
+
+            
+                        foreach (String goalString in _listSave)
+                        {
+                           var goalData = goalString.Split(',');
+
+                            if (goalData.Length > 0)
+                            {
+                                string goalType = goalData[0]; 
+                                switch (goalType)
+                                {
+                                    case "EternalGoal":
+                                        int points =int.Parse(goalData[3]);
+                                        EternalGoal newGoal =new EternalGoal(goalData[1],goalData[2],points);
+                                        _goals.Add(newGoal);
+                                        break;
+
+                                    case "SimpleGoal":
+                                        _goals.Add(new SimpleGoal(goalData[1],goalData[2],int.Parse(goalData[3]),bool.Parse(goalData[4])));
+                                        break;
+
+                                    case "CheckListGoal":
+                                        _goals.Add(new ChecklistGoal(goalData[1], goalData[2],int.Parse(goalData[3]),int.Parse(goalData[4]),int.Parse(goalData[5])));
+                                        break;
+
+                                    default:
+                                        Console.WriteLine($"Tipo de meta desconocido: {goalType}");
+                                        break;
+                                }
+                            } 
+                        }
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

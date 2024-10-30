@@ -5,7 +5,7 @@ class ChecklistGoal : Goal
     private int _bonus;
     protected int bonus;
 
-    public ChecklistGoal(string name,string description,int points,int target,int bonus):base(name,description,points){
+    public ChecklistGoal(string name,string description,int points,int bonus,int target):base(name,description,points){
         _target=target;
         _bonus=bonus;
         _amountCompleted =0;
@@ -32,7 +32,7 @@ class ChecklistGoal : Goal
     public override string GetDetailsString()
     {
         // Implementación del método
-         return $"CheckListGoal,{shortName},{description},{points},{_target},{bonus},{_amountCompleted}";
+         return $"CheckListGoal,{shortName},{description},{points},{bonus},{_target},{_amountCompleted}";
     }
 
 }
